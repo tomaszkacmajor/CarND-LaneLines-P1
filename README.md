@@ -16,7 +16,7 @@ My pipeline consists of 10 steps:</br>
 7. [Hough lines detection](#gaussian-blurring)</br>
 8. [Filtering Hough lines](#filtering-hough-lines)</br>
 9. [Averaging line segments](#averaging-line-segments)</br>
-10. [Applying running average on final lines](#applying-running-average-on-final-lines)</br>
+10. [Applying moving  average on final lines](#applying-moving -average-on-final-lines)</br>
 </br>
 ###Reading image or video frame
 The main method processing the image takes its path as argument. The image is loaded using *matplotlib.image*. 
@@ -36,6 +36,7 @@ elow, there are 3 examples of loaded images. Later, after each step, intermediat
 <img src="./output_images/solidYellowCurve2_1_original.jpg" height="160">
 <img src="./output_images/challengeSnap3_1_original.jpg" height="160">
 </br>
+---
 ###Filtering white and yellow colors
 This step wouldn't be necessary for the first two easier images. In the third example, after gray scale conversion, color difference between the yellow line and the road is very small. Thus the idea of filtering only 2 key colors to detect all required lanes. Firstly, the image is converted to [HSL color space](https://en.wikipedia.org/wiki/HSL_and_HSV). HSL (Hue, Saturation, Lightness) color space concept is based on human vision color perception. This is  why it's easier to differenciate desired colors (yellow and white) even if there are shadows on the image. The code below is inspired by similar [project](https://github.com/naokishibuya/car-finding-lane-lines).
 ```python
@@ -62,6 +63,7 @@ Below, there are test images after color filtering.</br>
 <img src="./output_images/solidYellowCurve2_2_whiteYellowImage.jpg" height="160">
 <img src="./output_images/challengeSnap3_2_whiteYellowImage.jpg" height="160">
 </br>
+---
 ###Conversion to grayscale
 
 As in many computer vision application, the image is converted to grayscale. It's mainly for the simplicity and speed of further operations.
@@ -76,6 +78,7 @@ grayImage = grayscale(whiteYellowImage)
 <img src="./output_images/solidYellowCurve2_3_grayImage.jpg" height="160">
 <img src="./output_images/challengeSnap3_3_grayImage.jpg" height="160">
 </br>
+---
 ###Gaussian blurring
 To supress noise and spurious gradients Gaussian smoothing is applied. By experiments, kernel of size 5 was chosen. 
 ```python
@@ -89,6 +92,7 @@ def gaussian_blur(img, kernel_size):
 <img src="./output_images/solidYellowCurve2_4_blurredImage.jpg" height="160">
 <img src="./output_images/challengeSnap3_4_blurredImage.jpg" height="160">
 </br>
+---
 ###Edge detection
 
 To detect edges, let's use popular [Canny](http://docs.opencv.org/2.4/modules/imgproc/doc/feature_detection.html?highlight=canny#canny) method. It's called with 2 parameters: low and high thresholds which define how strong the edges should be to be shown.
@@ -106,6 +110,7 @@ Below, there are outputs of this operation.</br>
 <img src="./output_images/challengeSnap3_5_maskedImage.jpg" height="160">
 
 </br>
+---
 ###Region of interest definition
 To filter out unnecessary objects in the image, the region of interest is defined. Such mask, here it's trapezoid, is then applied to the working image.
 ```python
@@ -130,6 +135,7 @@ vertices = np.array([[0, imgHeight], [imgWidth*0.45, yTopMask],
 maskedImage = region_of_interest(edgesImage, [vertices])
 ```
 </br>
+---
 ###Hough lines detection
 
 Now, having edges detected in our interest area, all straight lines need to be identified. This is done by [Hough transform](http://docs.opencv.org/2.4/doc/tutorials/imgproc/imgtrans/hough_lines/hough_lines.html). This operation has quite many parameters which need to be tuned experimentally.  
@@ -149,6 +155,7 @@ Below, there are tested images with found lines plotted.</br>
 <img src="./output_images/solidYellowCurve2_6_origWithHoughLines.jpg" height="160">
 <img src="./output_images/challengeSnap3_6_origWithHoughLines.jpg" height="160">
 </br>
+---
 ###Filtering Hough lines
 
 As we can see above, some line segments are unwanted. For example, small horizontal lines or some lines appearing on cars. Therefore, for each Hough line there is a slope parameter calculated. Only lines with slopes between 17 and 56 degrees are left for further analysis (it correspond to tangents of values 0.3 and 1.5).
@@ -169,9 +176,10 @@ Below, there are only filtered Hough lines.</br>
 <img src="./output_images/solidYellowCurve2_7_origWithHoughLinesFiltered.jpg" height="160">
 <img src="./output_images/challengeSnap3_7_origWithHoughLinesFiltered.jpg" height="160">
 </br>
+---
 ###Averaging line segments
 
-All found Hough lines should be right now averaged/extrapolated to produce only two lines representing lanes. The first task is to divide lines into 2 groups (left and right - deduced from the slope sign). Then, one can use best fit for the points representing line segments or take an average from these lines. I decided to apply weighted average to calculate resulting slopes and intercepts. Here, lenghts of line segments serve as weights. The longer segment is, the more influence it has for the results. In addition, to amplify the importance of the segment length, the weight is calculated as square of this parameter.
+All found Hough lines should be right now averaged/extrapolated to produce only two lines representing lanes. The first task is to divide lines into 2 groups (left and right - deduced from the slope sign). Then, one can use best linear fit for the points representing line segments or take an average from these lines. I decided to apply weighted average to calculate resulting slopes and intercepts. Here, lenghts of line segments serve as weights. The longer segment is, the more influence it has for the results. In addition, to amplify the importance of the segment length, the weight is calculated as square of this parameter.
 
 ```python
 for line in houghLines:
@@ -216,9 +224,9 @@ The final output of the pipeline. </br>
 <img src="./output_images/solidYellowCurve2_8_origWithFoundLanes.jpg" height="160">
 <img src="./output_images/challengeSnap3_8_origWithFoundLanes.jpg" height="160">
 </br>
-###Applying running average on final lines
+###Applying moving average on final lines
 
-While running the pipeline on the video stream, we can observe that the lines are flickering. To avoid it, we can apply [cumulative moving average](https://en.wikipedia.org/wiki/Moving_average) of the line parameters. For each frame it averages last *n* results including current one with bigger weights for more recent results. The possible implementation with *n*=9 is as follows.
+While running the pipeline on the video stream, we can observe that the lines are flickering. To avoid it, we can apply [cumulative moving average](https://en.wikipedia.org/wiki/Moving_average) of the line parameters. For each frame it averages last *n* results including current one with bigger weights for more recent results. By having in memory the last averaged frame we can also use it in case when no line is found by some mistake. The possible implementation with *n*=9 is as follows.
 
 ```python
 def get_averaged_line_params(lineParams, leftHoughLinesExist, rightHoughLinesExist):
@@ -264,24 +272,21 @@ def get_averaged_line_params(lineParams, leftHoughLinesExist, rightHoughLinesExi
 ```
 ``` python
 lineParams = [a_left, b_left, a_right, b_right]
-lineParams = get_averaged_line_params(lineParams, leftHoughLinesExist, rightHoughLinesExist)
-```    
-   
+lineParams = get_averaged_line_params(lineParams, leftHoughLinesExist, 
+				rightHoughLinesExist)
+```
+				
+>###*Exemplary videos processed by this pipeline can be found in "output_movies" folder*
    
     
-###2. Identify potential shortcomings with your current pipeline
+##2. Potential shortcomings
 
 
-One potential shortcoming would be what would happen when ... 
-
-Another shortcoming could be ...
+One potential shortcoming of the descirbed pipeline would be what would happen when another car appears in our region of interest. It could produce some lines that could be identified as lanes. When applying the pipeline in practice, I think there can be also too many parameters given by a'priori assumptions like lane colors or strictly defined region of interest. The pipeline probably would not work so well when the lanes are curvy or when some white/yellow flat signs are marked on the road.
 
 
-###3. Suggest possible improvements to your pipeline
+##3. Possible improvements
 
-A possible improvement would be to ...
-
-Another potential improvement could be to ...
-
-
-
+A possible improvement would be to use some kind of higher order polynomial fit to handle curvy lanes. 
+Also, instead of just guessing/experimenting with many parameters used here, maybe we can automate the process of parameters search. For example by some optimization - having the desired output (ground truth) of many images and processing input images with parameters combinations we could find a perfect set of parameters.
+Also, some artificial intelligence methods could be used to learn specific shapes of lanes and then detect them. It could be necessary when the road is without any lane - then more complicated scene understanding should be required.
