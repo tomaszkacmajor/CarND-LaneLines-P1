@@ -5,6 +5,8 @@ Finding Lane Lines on the Road
 
 ####The goal of this project is to make a pipeline that finds lane lines on the road. Either images or video can be input to test the pipeline. The project is done in [Python with OpenCV](https://www.packtpub.com/books/content/basics-jupyter-notebook-and-python) library and can be opened in [Jupyter Notebook](https://pypi.python.org/pypi/opencv-python).
 
+>###*Exemplary videos processed by this pipeline can be found in "output_movies" folder*
+
 ##1. Pipeline description
 My pipeline consists of 10 steps:</br>
 1. [Reading image or video frame](#reading-image-or-video-frame)</br>
@@ -16,7 +18,7 @@ My pipeline consists of 10 steps:</br>
 7. [Hough lines detection](#gaussian-blurring)</br>
 8. [Filtering Hough lines](#filtering-hough-lines)</br>
 9. [Averaging line segments](#averaging-line-segments)</br>
-10. [Applying moving  average on final lines](#applying-moving -average-on-final-lines)</br>
+10. [Applying moving  average on final lines](#applying-moving-average-on-final-lines)</br>
 </br>
 ###Reading image or video frame
 The main method processing the image takes its path as argument. The image is loaded using *matplotlib.image*. 
@@ -227,6 +229,7 @@ The final output of the pipeline. </br></br>
 <img src="./output_images/solidYellowCurve2_8_origWithFoundLanes.jpg" height="160">
 <img src="./output_images/challengeSnap3_8_origWithFoundLanes.jpg" height="160">
 
+---
 ###Applying moving average on final lines
 
 While running the pipeline on the video stream, we can observe that the lines are flickering. To avoid it, we can apply [cumulative moving average](https://en.wikipedia.org/wiki/Moving_average) of the line parameters. For each frame it averages last *n* results including current one. *Cumulative* version of this method applies bigger weights for more recent results. By having in memory the last averaged frame we can also use it in case when no line is found in a frame by some mistake. The possible implementation with *n*=9 is as follows.
@@ -278,9 +281,7 @@ lineParams = [a_left, b_left, a_right, b_right]
 lineParams = get_averaged_line_params(lineParams, leftHoughLinesExist, 
 				rightHoughLinesExist)
 ```
-				
->###*Exemplary videos processed by this pipeline can be found in "output_movies" folder*
-   
+				  
     
 ##2. Potential shortcomings
 
