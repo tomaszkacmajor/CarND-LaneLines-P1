@@ -1,11 +1,9 @@
 # **CarND-LaneLines-P1** 
 Finding Lane Lines on the Road
 
-<img src="./output_images/solidYellowCurve2_8_origWithFoundLanes.jpg" width="500">
+[![IMAGE ALT TEXT](./output_movies/yt_screenshot.jpg)](https://www.youtube.com/watch?v=-kU6nh0G6jY) 
 
 #### The goal of this project is to make a pipeline that finds lane lines on the road. Either images or video can be input to test the pipeline. The project is done in [Python with OpenCV](https://www.packtpub.com/books/content/basics-jupyter-notebook-and-python) library and can be opened in [Jupyter Notebook](https://pypi.python.org/pypi/opencv-python).
-
->### *Exemplary videos processed by this pipeline can be found in "output_movies" folder*
 
 ## 1. Pipeline description
 My pipeline consists of 10 steps:</br>
