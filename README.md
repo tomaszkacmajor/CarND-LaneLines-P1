@@ -18,6 +18,7 @@ My pipeline consists of 10 steps:</br>
 9. [Averaging line segments](#averaging-line-segments)</br>
 10. [Applying moving  average on final lines](#applying-moving-average-on-final-lines)</br>
 </br>
+
 ### Reading image or video frame
 The main method processing the image takes its path as argument. The image is loaded using *matplotlib.image*. 
 ```python
