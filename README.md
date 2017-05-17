@@ -7,4 +7,4 @@ Finding Lane Lines on the Road
 
 </br>
 
-## For a detailed discussion go to this [blog post](http://tomaszkacmajor.pl/index.php/2017/05/17/first-step-stay-track-lane-lines-detection/) about the project.
+## For a detailed discussion go to this [blog post](http://tomaszkacmajor.pl/index.php/2017/05/17/lane-lines-detection/) about the project.
