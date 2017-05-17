@@ -5,4 +5,6 @@ Finding Lane Lines on the Road
 
 [![IMAGE ALT TEXT](./output_movies/yt_screenshot.jpg)](https://www.youtube.com/watch?v=-kU6nh0G6jY) 
 
-### For a detailed discussion go to the [blog post](http://tomaszkacmajor.pl/index.php/2017/05/17/first-step-stay-track-finding-lane-lines/) about this project.
+</br>
+
+## For a detailed discussion go to this [blog post](http://tomaszkacmajor.pl/index.php/2017/05/17/first-step-stay-track-finding-lane-lines/) about the project.
