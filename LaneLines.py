@@ -170,6 +170,7 @@ def draw_lanes(image, showIntermediateSteps=False, imageName=""):
     yTopMask = imgHeight*0.55
     vertices = np.array([[0, imgHeight], [imgWidth*0.45, yTopMask], [imgWidth*0.55, yTopMask], [imgWidth,imgHeight]], np.int32)
     maskedImage = region_of_interest(edgesImage, [vertices])
+       
 
     rho = 2
     theta = np.pi/180
@@ -278,30 +279,36 @@ def draw_lanes(image, showIntermediateSteps=False, imageName=""):
 #        cv2.imwrite("output_images/"+imgName+"_2_whiteYellowImage.jpg",cv2.cvtColor(whiteYellowImage, cv2.COLOR_BGR2RGB))
 #        cv2.imwrite("output_images/"+imgName+"_3_grayImage.jpg",grayImage)
 #        cv2.imwrite("output_images/"+imgName+"_4_blurredImage.jpg",blurredImage)
+#        cv2.imwrite("output_images/"+imgName+"_5_edgesImage.jpg",edgesImage)
 #        cv2.imwrite("output_images/"+imgName+"_5_maskedImage.jpg",maskedImage)
 #        cv2.imwrite("output_images/"+imgName+"_6_origWithHoughLines.jpg",cv2.cvtColor(origWithHoughLines, cv2.COLOR_BGR2RGB))
 #        cv2.imwrite("output_images/"+imgName+"_7_origWithHoughLinesFiltered.jpg",cv2.cvtColor(origWithHoughLinesFiltered, cv2.COLOR_BGR2RGB))
 #        cv2.imwrite("output_images/"+imgName+"_8_origWithFoundLanes.jpg",cv2.cvtColor(origWithFoundLanes, cv2.COLOR_BGR2RGB))
     
         fig = plt.figure(figsize = (30,20))
-        plt.subplot(141)
+        plt.subplot(131)
         plt.imshow(image)
-        plt.subplot(142)
+        plt.subplot(132)
         plt.imshow(whiteYellowImage)
-        plt.subplot(143)
+        plt.subplot(133)
         plt.imshow(grayImage, cmap='gray')
-        plt.subplot(144)
-        plt.imshow(blurredImage, cmap='gray')        
-      
+        
         fig2 = plt.figure(figsize = (30,20))
-        plt.subplot(141)
+        plt.subplot(131)
+        plt.imshow(blurredImage, cmap='gray')       
+        plt.subplot(132)
+        plt.imshow(edgesImage, cmap='gray')
+        plt.subplot(133)
         plt.imshow(maskedImage, cmap='gray')
-        plt.subplot(142)
+        
+        fig3 = plt.figure(figsize = (30,20))       
+        plt.subplot(131)
         plt.imshow(origWithHoughLines)
-        plt.subplot(143)
+        plt.subplot(132)
         plt.imshow(origWithHoughLinesFiltered)
-        plt.subplot(144)
-        plt.imshow(origWithFoundLanes)     
+        plt.subplot(133)
+        plt.imshow(origWithFoundLanes)           
+        
         plt.show()
     
     return origWithFoundLanes                    
